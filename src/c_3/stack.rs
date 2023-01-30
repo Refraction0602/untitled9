@@ -51,7 +51,7 @@ impl<T: Clone> Stack<T> {
 }
 
 /// 括号匹配
-pub fn par_checker(par: &str) -> bool {
+fn par_checker(par: &str) -> bool {
     let mut stack = Stack::new();
     // 判断括号是否匹配
     let par_match = |open: char, close: char| {
@@ -79,4 +79,34 @@ pub fn par_checker(par: &str) -> bool {
     }
 
     stack.is_empty()
+}
+
+/// 十进制转换至其他进制
+fn base_converter(mut dec_num: u32, base: u32) -> String {
+    let digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
+    let mut rem_stack = Stack::new();
+
+    while dec_num > 0 {
+        // 获取余数
+        let rem = dec_num % base;
+        // 入栈
+        rem_stack.push(rem);
+        // 重新设置为商
+        dec_num /= base;
+    }
+
+    // 出栈
+    let mut base_str = String::new();
+    while let Some(rem) = rem_stack.pop() {
+        base_str += &digits[rem as usize].to_string();
+    }
+
+    base_str
+}
+
+/// 进制转换实例
+pub fn base_converter_p() {
+    let bin_str = base_converter(233, 2);
+    let hex_str = base_converter(43, 16);
+    println!("233 is b{bin_str}, 43 is x{hex_str}");
 }
